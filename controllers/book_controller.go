@@ -1,15 +1,24 @@
 package controllers
 
 import (
+	app "books-api/app/error"
 	"books-api/config/database"
 	"books-api/models"
 	"books-api/utils"
+	"errors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 func FindBooks(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.InternalServerError(errors.New("Internal server error"), c)
+			return
+		}
+	}()
+
 	db := database.GetDatabase()
 
 	search := "%" + c.Request.URL.Query().Get("search") + "%"
@@ -17,18 +26,23 @@ func FindBooks(c *gin.Context) {
 	var books []models.Book
 	var count int64
 
-	err := db.Scopes(utils.PaginationParams(c)).Order("name ASC").Find(&books, "name ILIKE ?", search).Count(&count).Error
+	err := db.Scopes(utils.PaginationParams(c)).Order("name ASC").Find(&books, "namesdf ILIKE ?", search).Count(&count).Error
 	if err != nil {
-		c.JSON(400, gin.H{
-			"error": "Cannot list books" + err.Error(),
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
-	c.JSON(200, map[string]interface{}{"books": books, "count": count})
+	app.OK(map[string]interface{}{"books": books, "count": count}, c)
 }
 
 func FindBookByID(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.InternalServerError(errors.New("Internal server error"), c)
+			return
+		}
+	}()
+
 	db := database.GetDatabase()
 
 	var book models.Book
@@ -37,17 +51,21 @@ func FindBookByID(c *gin.Context) {
 
 	err := db.First(&book, "id = ?", id).Error
 	if err != nil {
-		c.JSON(404, gin.H{
-			"message": "Cannot find book: " + err.Error(),
-			"code":    404,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
-	c.JSON(200, book)
+	app.OK(book, c)
 }
 
 func CreateBook(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.InternalServerError(errors.New("Internal server error"), c)
+			return
+		}
+	}()
+
 	db := database.GetDatabase()
 
 	var book models.Book
@@ -55,10 +73,7 @@ func CreateBook(c *gin.Context) {
 	err := c.ShouldBindJSON(&book)
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Cannot bing JSON: " + err.Error(),
-			"code":    400,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
@@ -68,17 +83,21 @@ func CreateBook(c *gin.Context) {
 	err = db.Create(&book).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Cannot create book: " + err.Error(),
-			"code":    400,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
-	c.JSON(200, book)
+	app.OK(book, c)
 }
 
 func UpdateBook(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.InternalServerError(errors.New("Internal server error"), c)
+			return
+		}
+	}()
+
 	db := database.GetDatabase()
 
 	var book models.Book
@@ -86,10 +105,7 @@ func UpdateBook(c *gin.Context) {
 	err := c.ShouldBindJSON(&book)
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Cannot bing JSON: " + err.Error(),
-			"code":    400,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
@@ -98,17 +114,21 @@ func UpdateBook(c *gin.Context) {
 	err = db.Updates(&book).Error
 
 	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Cannot update book: " + err.Error(),
-			"code":    400,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
-	c.JSON(200, book)
+	app.OK(book, c)
 }
 
 func DeleteBook(c *gin.Context) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.InternalServerError(errors.New("Internal server error"), c)
+			return
+		}
+	}()
+
 	db := database.GetDatabase()
 
 	id := c.Param("id")
@@ -117,21 +137,15 @@ func DeleteBook(c *gin.Context) {
 
 	err := db.First(&book, "id = ?", id).Error
 	if err != nil {
-		c.JSON(404, gin.H{
-			"message": "Cannot find book: " + err.Error(),
-			"code":    404,
-		})
+		app.NotFound(errors.New(err.Error()), c)
 		return
 	}
 
 	err = db.Delete(&book, "id = ?", id).Error
 	if err != nil {
-		c.JSON(400, gin.H{
-			"message": "Cannot delete book: " + err.Error(),
-			"code":    400,
-		})
+		app.BadRequest(errors.New(err.Error()), c)
 		return
 	}
 
-	c.JSON(200, map[string]interface{}{"delete": true})
+	app.OK(map[string]interface{}{"delete": true}, c)
 }
