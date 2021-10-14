@@ -7,5 +7,5 @@ export DB_NAME=books
 export DB_USER=developer
 export DB_PASS=es12t13o2
 
-rm -rv ./*.bin ; go build -v -o application.bin
+rm -rv ./*.bin; go build -v -o application.bin
 ./application.bin
