@@ -26,7 +26,7 @@ func FindBooks(c *gin.Context) {
 	var books []models.Book
 	var count int64
 
-	err := db.Scopes(utils.PaginationParams(c)).Order("name ASC").Find(&books, "namesdf ILIKE ?", search).Count(&count).Error
+	err := db.Scopes(utils.PaginationParams(c)).Order("name ASC").Find(&books, "name ILIKE ?", search).Count(&count).Error
 	if err != nil {
 		app.BadRequest(errors.New(err.Error()), c)
 		return
