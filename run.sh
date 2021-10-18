@@ -1,6 +1,7 @@
 #!/bin/sh
 
 export APP_PORT=3000
+export JWT_SECRET=BOOK_API
 export DB_HOST=localhost
 export DB_PORT=5432
 export DB_NAME=books

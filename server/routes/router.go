@@ -10,6 +10,10 @@ func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("/api")
 
 	{
+		session := main.Group("/session")
+		{
+			session.POST("/", controllers.SendLogin)
+		}
 		users := main.Group("/users")
 		{
 			users.POST("/", controllers.CreateUser)
