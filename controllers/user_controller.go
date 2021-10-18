@@ -42,7 +42,7 @@ func CreateUser(ctx *gin.Context) {
 	id, _ := uuid.NewUUID()
 	payload.ID = id.String()
 
-	payload.Password = utils.SHA256Encoder(payload.Password)
+	payload.Password = utils.BcryptEndoderPassword([]byte(payload.Password))
 
 	err = db.Create(&payload).Error
 
