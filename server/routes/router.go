@@ -8,7 +8,12 @@ import (
 
 func ConfigRoutes(router *gin.Engine) *gin.Engine {
 	main := router.Group("/api")
+
 	{
+		users := main.Group("/users")
+		{
+			users.POST("/", controllers.CreateUser)
+		}
 		books := main.Group("/books")
 		{
 			books.GET("/", controllers.FindBooks)
