@@ -13,5 +13,5 @@ func BcryptEndoderPassword(password []byte) string {
 func CompareHashAndPassword(password []byte, password_compare []byte) bool {
 	err := bcrypt.CompareHashAndPassword(password, password_compare)
 
-	return err == nil
+	return err != nil
 }

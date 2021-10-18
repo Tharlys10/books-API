@@ -37,7 +37,7 @@ func SendLogin(ctx *gin.Context) {
 		return
 	}
 
-	if utils.CompareHashAndPassword([]byte(payload.Password), []byte(user.Password)) {
+	if utils.CompareHashAndPassword([]byte(user.Password), []byte(payload.Password)) {
 		app.BadRequest(errors.New("E-mail ou password incorrect"), ctx)
 		return
 	}
