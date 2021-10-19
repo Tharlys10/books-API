@@ -8,7 +8,7 @@ Na tentativa de estudar a famosa e grandiosa linguagem denominada GO (Golang);
 
 ## Run project
 
-* Antes de tudo é necessario configurar as variaveis de ambiente que estão no arquivo <a src="https://github.com/Tharlys10/books-API/blob/main/run.sh">run.sh</a>
+* Antes de tudo é necessario configurar as variaveis de ambiente que estão no arquivo *run.sh* na raiz do projeto
 
 ```sh
 export APP_PORT=3000
@@ -29,11 +29,11 @@ make run
 
 ## Main libraries used
 
-* <a src="https://github.com/gin-gonic/gin">GIN</a>
+* GIN
 
   Gin is a web framework written in Go (Golang). It features a martini-like API with performance that is up to 40 times faster thanks to httprouter. If you need performance and good productivity, you will love Gin.
   
-* <a src="https://github.com/go-gorm/gorm">GORM</a>
+* GORM
 
   The fantastic ORM library for Golang, aims to be developer friendly.
 
